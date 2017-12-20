@@ -2,17 +2,18 @@ package proxml.test;
 import processing.core.PApplet;
 import proxml.*;
 
+
+// Provide Javadoc comments for each public class / interface.
+
+/**
+ * PJDCC - Summary for class responsabilities.
+ *
+ * @author Pansini salvatore
+ * @since 
+ * @version 
+ */
 public class Flickr extends PApplet{
 
-	// Provide Javadoc comments for each public class / interface.
-
-	/**
-	 * PJDCC - Summary for class responsabilities.
-	 *
-	 * @author Pansini salvatore
-	 * @since 
-	 * @version 
-	 */
 	XMLElement flickr;
 	XMLInOut xmlInOut;
 
