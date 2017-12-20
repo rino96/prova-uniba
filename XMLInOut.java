@@ -609,7 +609,7 @@ public class XMLInOut{
 				if (counter > 5 && !checkedCDATA){
 					checkedCDATA = true;
 					if (!result.toString().toUpperCase().equals("CDATA["))
-						throw new RuntimeException(
+						throw new Exception(
 							"Illegal use of <![. " + 
 							"These operators are used to start a CDATA section. <![CDATA[]]>" +
 							" Line:" + line
@@ -619,9 +619,9 @@ public class XMLInOut{
 			}
 
 			if ((char) toParse.read() != ']')
-				throw new RuntimeException("Wrong Syntax at the end of a CDATA section <![CDATA[]]> Line:"+line);
+				throw new Exception("Wrong Syntax at the end of a CDATA section <![CDATA[]]> Line:"+line);
 			if ((char) toParse.read() != '>')
-				throw new RuntimeException("Wrong Syntax at the end of a CDATA section <![CDATA[]]> Line:"+line);
+				throw new Exception("Wrong Syntax at the end of a CDATA section <![CDATA[]]> Line:"+line);
 
 			//XMLElement keep = new XMLElement(sTagName,attributes);
 			//actualElement.addChild(keep);
@@ -643,7 +643,7 @@ public class XMLInOut{
 				// TODO Auto-generated catch block
 				System.out.println("Something was wrong");
 			}catch(NullPointerException e){
-				throw new RuntimeException("You need to implement the xmlEvent() function to handle the loaded xml files.");
+				throw new Exception("You need to implement the xmlEvent() function to handle the loaded xml files.");
 			}
 		}
 
@@ -720,7 +720,7 @@ public class XMLInOut{
 			// not a url, that's fine
 			System.out.println("Descriptive error");//mio
 		}catch (IOException e){
-			throw new RuntimeException("Error downloading from URL " + filename);
+			throw new Exception("Error downloading from URL " + filename);
 		}
 	}
 	
@@ -797,7 +797,7 @@ public class XMLInOut{
 	
 	public void ifFilnameActualMethod(String filenameActual, String filename) {
 		if (filenameActual.equalsIgnoreCase(filename) && !filenameActual.equals(filename)){
-			throw new RuntimeException("This file is named " + filenameActual + " not " + filename + ".");
+			throw new Exception("This file is named " + filenameActual + " not " + filename + ".");
 		}
 	}
 	
@@ -953,13 +953,13 @@ public class XMLInOut{
 				InputStream test = openStream(documentUrl);
 				loader = new Thread(new Loader(new BufferedReader(new InputStreamReader(test)),parent));
 			}catch (Exception e){
-				throw new RuntimeException("proXML was not able to load the given xml-file: " + documentUrl + " Please check if you have entered the correct url.");
+				throw new Exception("proXML was not able to load the given xml-file: " + documentUrl + " Please check if you have entered the correct url.");
 			}
 		}
 		try{
 			loader.start();
 		}catch (Exception e){
-			throw new RuntimeException("proXML was not able to read the given xml-file: " + documentUrl + " Please make sure that you load a file that contains valid xml.");
+			throw new Exception("proXML was not able to read the given xml-file: " + documentUrl + " Please make sure that you load a file that contains valid xml.");
 		}
 	}
 	
@@ -991,14 +991,14 @@ public class XMLInOut{
 				InputStream test = openStream(documentUrl);
 				loader = new Loader(new BufferedReader(new InputStreamReader(test)),null);
 			}catch (Exception e){
-				throw new RuntimeException("proXML was not able to load the given xml-file: " + documentUrl + " Please check if you have entered the correct url.");
+				throw new Exception("proXML was not able to load the given xml-file: " + documentUrl + " Please check if you have entered the correct url.");
 			}
 		}
 		try{
 			loader.run();
 			return loader.xmlElement;
 		}catch (Exception e){
-			throw new RuntimeException("proXML was not able to read the given xml-file: " + documentUrl + " Please make sure that you load a file that contains valid xml.");
+			throw new Exception("proXML was not able to read the given xml-file: " + documentUrl + " Please make sure that you load a file that contains valid xml.");
 		}
 	}
 
