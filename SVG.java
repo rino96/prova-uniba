@@ -1,7 +1,8 @@
 package proxml.test;
 import processing.core.PApplet;
-import processing.core.PImage;
 import proxml.*;
+//Provide Javadoc comments for each public class / interface.
+
 /**
 * PJDCC - Summary for class responsabilities.
 *
@@ -9,13 +10,10 @@ import proxml.*;
 * @since 
 * @version 
 */
-public class Test extends PApplet{
-
-	//	to store the background after painting an ellipse
-	PImage back;
+public class SVG extends PApplet{
 
 	//	xml element to store and load the drawn ellipses
-	XMLElement ellipses;
+	XMLElement svg;
 	XMLInOut xmlInOut;
 
 	int xPos = 0;
@@ -32,23 +30,25 @@ public class Test extends PApplet{
 			//folder is a field of PApplet 
 			//giving you the path to your sketch folder
 			xmlInOut = new XMLInOut(this);
-			xmlInOut.loadElement("weather.xml");
-			ellipses.printElementTree(" ");
+			xmlInOut.loadElement("svg.xml");
+			
 		}catch (InvalidDocumentException ide){
+			System.out.println("Something was wrong");
 			println("File does not exist");
 		}
-
-		//initialise PImage for background
-		back = new PImage(width, height);
-		loadPixels();
-		back.pixels = pixels;
+	}
+	
+	public void xmlEvent(XMLElement i_element){
+		svg = i_element;
+		svg.printElementTree(" ");
+		println(svg.getChild(0).countChildren());
 	}
 
 	public void draw(){
 	}
 
 	public static void main(String[] args){
-		PApplet.main(new String[] {Test.class.getName()});
+		PApplet.main(new String[] {SVG.class.getName()});
 	}
 
 }
