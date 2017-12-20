@@ -19,6 +19,54 @@ import java.util.regex.*;
 
 public class elar001 extends PApplet {
 
+	static class elarAttr{
+		
+		int width_default=800;
+		int height_default=600;
+
+		//colors zone
+		int white_color = color(255, 255, 255);
+		int yellow_color = color(242, 204, 47);
+		int black_color = color(0,0,0);
+		int red_color_01 = color(255,0,125);
+		int red_color_02 = color(255,0,0);
+		int green_color = color(125,255,0);
+		int blue_color = color (0,0, 255);
+
+		//color button
+		int button_gray_color=color(204);
+		int button_on_gray_color=color(255);
+		int button_press_gray_color=color(0);
+
+		//size button
+		int button_width=135;
+		int button_height=35;
+		int button_width_min=38;
+		int button_height_min=button_height = 0;
+
+		//init button positions
+		int button_x=10;
+		int button_y=60;
+		int button_separation=10;
+		int button_x_min=20;
+		int button_reviser=6;
+		int button_x_lang=width_default-150;
+		int button_y_lang=4;
+		int button_lang_separation=5;
+		int button_lang_adjustment=0;
+
+		//que bot\u00f3n est\u00e1 seleccionado?
+		boolean bos_en=false;
+		boolean bos_es=false;
+		boolean bos_gl=false;
+		boolean bos_home=false;
+		boolean bos_about_us=true;
+		boolean bos_services=false;
+		boolean bos_proyects=false;
+		boolean bos_contact=false;
+
+	}
+	
 /*
 v001
 
@@ -69,50 +117,6 @@ boolean[] draggingSlider;
 int[] pos;
 
 Rule rule;
-
-int width_default=800;
-int height_default=600;
-
-//colors zone
-int white_color = color(255, 255, 255);
-int yellow_color = color(242, 204, 47);
-int black_color = color(0,0,0);
-int red_color_01 = color(255,0,125);
-int red_color_02 = color(255,0,0);
-int green_color = color(125,255,0);
-int blue_color = color (0,0, 255);
-
-//color button
-int button_gray_color=color(204);
-int button_on_gray_color=color(255);
-int button_press_gray_color=color(0);
-
-//size button
-int button_width=135;
-int button_height=35;
-int button_width_min=38;
-int button_height_min=button_height;
-
-//init button positions
-int button_x=10;
-int button_y=60;
-int button_separation=10;
-int button_x_min=20;
-int button_reviser=6;
-int button_x_lang=width_default-150;
-int button_y_lang=4;
-int button_lang_separation=5;
-int button_lang_adjustment=0;
-
-//que bot\u00f3n est\u00e1 seleccionado?
-boolean bos_en=false;
-boolean bos_es=false;
-boolean bos_gl=false;
-boolean bos_home=false;
-boolean bos_about_us=true;
-boolean bos_services=false;
-boolean bos_proyects=false;
-boolean bos_contact=false;
 
 //english
 int lang = 0;
