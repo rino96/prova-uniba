@@ -546,12 +546,8 @@ public class XMLInOut{
 		}
 		
 		public void ifThrowMethod(int counter){
-			try {
 				if (counter > 4)
-					throw new RuntimeException("Illegal use of &. Use &amp; entity instead. Line:"+line);
-			} catch (Exception e) {
-				System.out.println(" ");
-			}
+					throw new Exception("Illegal use of &. Use &amp; entity instead. Line:"+line);
 			
 		}
 		//_______________________________________________________________
