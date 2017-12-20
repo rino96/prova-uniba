@@ -17,6 +17,15 @@ import java.util.*;
 import java.util.zip.*; 
 import java.util.regex.*; 
 
+//Provide Javadoc comments for each public class / interface.
+
+/**
+* PJDCC - Summary for class responsabilities.
+*
+* @author var-group
+* @since 
+* @version 
+*/
 public class elar001 extends PApplet {
 
 	static class elarAttr{
@@ -410,7 +419,7 @@ public int numberPanels () {
 }
 
 
-public void serialEvent(Serial myPort) { 
+public void serialEvent(Serial myPor) { 
   // read the serial buffer:
   String myString = myPort.readStringUntil('\n');
   // if you got any bytes other than the linefeed:
