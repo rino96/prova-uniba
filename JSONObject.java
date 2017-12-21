@@ -126,7 +126,7 @@ final class Null {
      * @return      The object associated with the key.
      * @throws   JSONException if the key is not found.
      */
-    public Object get(String key) throws JSONException {
+    public String get(String key) throws JSONException {
         Object o = opt(key);
         if (o == null) {
             throw new JSONException("JSONObject[" + quote(key) +
@@ -197,6 +197,7 @@ final class Null {
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key) +
                 "] is not an int.");
+            return quote;
         }
     }
 
@@ -289,7 +290,7 @@ final class Null {
             return null;
         }
         Class klass = object.getClass();
-        Field[] fields = klass.getFields();
+        int[] fields = klass.getFields();
         int length = fields.length;
         if (length == 0) {
             return null;
@@ -418,8 +419,8 @@ final class Null {
      * so the clone method returns itself.
      * @return     NULL.
      */
-    protected final Object clone() {
-        return this;
+    protected final String clone() {
+        return this.toString();
     }
     /**
      * A Null object is equal to the null value and to itself.
@@ -427,9 +428,24 @@ final class Null {
      * @return true if the object parameter is the JSONObject.NULL object
      *  or null.
      */
-    public boolean equals(Object object) {
-        return object == null || object == this;
-    }/**
+    public class EQLFIXED
+    	private int value;//mio
+    public boolean equals(Object obj) { if (o instanceof EQLFIXED) {
+
+  	  if (getClass () != obj.getClass ()) { 
+  	             return false; 
+  	        } else {
+  	           EQLFIXED temp = (EQLFIXED)obj;
+  	           return temp.value == value;
+  	         }
+        return obj == null || obj == this;
+    }
+    
+    public int hashCode() {//mio
+    	return value;//mio
+    }//mio
+    }//mio
+    /**
      * Get the "null" string value.
      * @return The string "null".
      */
@@ -483,7 +499,7 @@ final class Null {
      * @param key   A key string.
      * @return      An object which is the value, or null if there is no value.
      */
-    public Object opt(String key) {
+    public String opt(String key) {
         return key == null ? null : this.map.get(key);
     }
 
@@ -733,19 +749,19 @@ final class Null {
 
         boolean includeSuperClass = klass.getClassLoader() != null;
 
-        Method[] methods = (includeSuperClass) ?
+        int[] methods = (includeSuperClass) ?
                 klass.getMethods() : klass.getDeclaredMethods();
+                try {
+                    int method = methods[i];
+                    
+                    
         for (int i = 0; i < methods.length; i += 1) {
-            try {
-                Method method = methods[i];
-                
-                ifMethod1();
-                
-                
-            } catch (Exception ignore) {
-            	System.out.println("Descriptive error");//mio
-            }
+           
+        	ifMethod1();
         }
+                } catch (Exception ignore) {
+                	System.out.println("Descriptive error");//mio
+                }
     }
 
 
@@ -1047,13 +1063,14 @@ public class JSONObject {
      */
     public JSONObject(JSONObject jo, String[] names) {
         this();
+        try {
+    		
         for (int i = 0; i < names.length; i += 1) {
-        	try {
-        		putOnce(names[i], jo.opt(names[i]));
-        	} catch (Exception ignore) {
-        		System.out.println("Descriptive error");//mio
-        	}
+        	putOnce(names[i], jo.opt(names[i]));
         }
+        } catch (Exception ignore) {
+    		System.out.println("Descriptive error");//mio
+    	}
     }
 
 
@@ -1135,13 +1152,14 @@ public class JSONObject {
     public JSONObject(Object object, String names[]) {
         this();
         Class c = object.getClass();
+        try {
         for (int i = 0; i < names.length; i += 1) {
             String name = names[i];
-            try {
+            
                 putOpt(name, c.getField(name).get(object));
-            } catch (Exception ignore) {
-            	System.out.println("Descriptive error");//mio
-            }
+        }
+        } catch (Exception ignore) {
+        	System.out.println("Descriptive error");//mio
         }
     }
 
@@ -1194,6 +1212,7 @@ public class JSONObject {
         
           default:
         	  defaultMethod(c, t, sb);
+        	  break;
            
           }
     }
@@ -1235,8 +1254,8 @@ public class JSONObject {
      * @return The value that was associated with the name,
      * or null if there was no value.
      */
-    public Object remove(String key) {
-        return this.map.remove(key);
+    public String remove(String key) {
+        return (String)this.map.remove(key);
     }
 
     /**
@@ -1317,7 +1336,7 @@ public class JSONObject {
     }
     
     //____________________________________________
-    static public Object stringToValue(String s) {
+    static public String stringToValue(String s) {
     	
     	ifstringToValueMethod(s);
        
@@ -1340,7 +1359,13 @@ public class JSONObject {
         return s;
     }
 
+public void ifFloatThrowMethod(Object o) {
 
+    if (((Float)o).isInfinite() || ((Float)o).isNaN()) {
+        throw new JSONException(
+            "JSON does not allow non-finite numbers.");
+    }
+}
     /**
      * Throw an exception if the object is an NaN or infinite number.
      * @param o The object to test.
@@ -1354,10 +1379,9 @@ public class JSONObject {
                         "JSON does not allow non-finite numbers.");
                 }
             } else if (o instanceof Float) {
-                if (((Float)o).isInfinite() || ((Float)o).isNaN()) {
-                    throw new JSONException(
-                        "JSON does not allow non-finite numbers.");
-                }
+            	
+            	ifFloatThrowMethod(o);
+            	
             }
         }
     }
@@ -1371,7 +1395,7 @@ public class JSONObject {
      * @return A JSONArray of values.
      * @throws JSONException If any of the values are non-finite numbers.
      */
-    public JSONArray toJSONArray(JSONArray names) throws JSONException {
+    public JSONArray toJSONArray(JSONArray nam) throws JSONException {
         if (names == null || names.length() == 0) {
             return null;
         }
@@ -1522,7 +1546,7 @@ public class JSONObject {
     }
     //____________________________________________________________
     
-    public static Object eccezioneValueToString(Object o, Object value) {
+    public static String eccezioneValueToString(Object o, Object value) {
     	//divido il metodo principale per sviluppare solo le eccezioni
     	
     	if (value instanceof JSONString) {
@@ -1533,7 +1557,7 @@ public class JSONObject {
                 throw new JSONException("Something was wrong");
             }	
     }
-    	return o;
+    	return (String)o;
     }
     
     //_____________________________________________________________
@@ -1701,7 +1725,7 @@ public class JSONObject {
       */
      //_________________________________________________________
      
-     public static Object objectWrapMethod(Object object) {
+     public static String objectWrapMethod(Object object) {
     	 if (object instanceof JSONObject || object instanceof JSONArray || 
         		 NULL.equals(object)      || object instanceof JSONString || 
         		 object instanceof Byte   || object instanceof Character ||
@@ -1709,7 +1733,7 @@ public class JSONObject {
                  object instanceof Long   || object instanceof Boolean   || 
                  object instanceof Float  || object instanceof Double    ||
                  object instanceof String) {
-             return object;
+             return (String)object;
          }
      }
      
@@ -1730,7 +1754,7 @@ public class JSONObject {
      }
      //________________________________________________________
      
-     public static Object objectObjectWrapMethod(Object object) {
+     public static String objectObjectWrapMethod(Object object) {
     	 Package objectPackage = object.getClass().getPackage();
          String objectPackageName = ( objectPackage != null ? objectPackage.getName() : "" );
          if (objectPackageName.startsWith("java.") ||
@@ -1738,11 +1762,12 @@ public class JSONObject {
         		 object.getClass().getClassLoader() == null) {
              return object.toString();
          }
-         return new JSONObject(object);
+         Object f=new JSONObject(object);
+         return (String)f;
      }
      
      //__________________________________________________________
-     static Object wrap(Object object) {
+     static String wrap(Object object) {
          try {
              if (object == null) {
                  return NULL;
@@ -1755,7 +1780,8 @@ public class JSONObject {
              jsonArraywrapMethod(object);
              
              if (object instanceof Map) {
-                 return new JSONObject((Map)object);
+            	 Object k=new JSONObject((Map)object);
+                 return (String)k;
              }
              objectObjectWrapMethod(object);
              
