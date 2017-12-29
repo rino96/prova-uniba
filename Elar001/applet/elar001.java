@@ -1,11 +1,6 @@
 import processing.core.*; 
-import processing.xml.*; 
-//kk
-import de.bezier.data.sql.*; 
-import processing.serial.*; 
-
 import java.applet.*;  
-import java.awt.Image; 
+ 
 import java.io.*; 
 import java.net.*; 
 import java.text.*; 
