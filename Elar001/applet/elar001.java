@@ -19,7 +19,7 @@ import java.util.regex.*;
 */
 final public class elar001 extends PApplet {
 
-	 private static class elarAttr{
+	 private  class elarAttr{
 		
 		int width_default=800;
 		int height_default=600;
