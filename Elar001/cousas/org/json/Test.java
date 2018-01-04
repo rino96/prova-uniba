@@ -65,8 +65,8 @@ public class Test {
         } 
 	}
 	public static void try1Method(JSONArray a) {//mio
-		private final String stampa = "Something was wrong ";
-		private final String eccezione = "Exception";
+	 String stampa = "Something was wrong ";
+	 String eccezione = "Exception";
 		try {
             a = new JSONArray("[\n\r\n\r}");
             System.out.println(a.toString());
