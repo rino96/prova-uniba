@@ -96,7 +96,7 @@ public class Test {
 		String stampa = "Something was wrong ";
 		String eccezione = "Exception";
 		String howard = "howard";
-		private final String stooge = j.getDouble("stooge");
+		 String stooge = j.getDouble("stooge");
 		 System.out.print(eccezione);
          try {
              System.out.println(stooge);
