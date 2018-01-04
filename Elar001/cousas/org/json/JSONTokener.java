@@ -79,6 +79,10 @@ public class JSONTokener {
      * so that you can test for a digit or letter before attempting to parse
      * the next number or identifier.
      */
+    
+    /**
+     * @throws java.io.IOException
+     */
     public void back() throws JSONException {
         if (usePrevious || index <= 0) {
             throw new JSONException("Stepping back two steps is not supported");

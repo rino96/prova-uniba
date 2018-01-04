@@ -131,12 +131,8 @@ final class Null {
 
 
     /**
-     * Produce a string from a double. The string "null" will be returned if
-     * the number is not finite.
-     * @param  d A double.
-     * @return A String.
+     * @throws java.io.IOException
      */
-
 
 
     /**

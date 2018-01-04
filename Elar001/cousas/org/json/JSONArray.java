@@ -236,6 +236,10 @@ public class JSONArray {
 	     * @return An object value.
 	     * @throws JSONException If there is no value for the index.
 	     */
+	    
+	    /**
+         * @throws java.io.IOException
+         */
 	    public String get(int index) throws JSONException {
 	        Object o = opt(index);
 	        if (o == null) {
