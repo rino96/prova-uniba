@@ -132,6 +132,7 @@ public class HTTP {
         Iterator     keys = o.keys();
         String       s=null;
         StringBuffer sb = new StringBuffer();
+        String cz = null;
         if (o.has("Status-Code") && o.has("Reason-Phrase")) {
             sb.append(o.getString("HTTP-Version"));
             sb.append(' ');

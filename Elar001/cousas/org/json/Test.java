@@ -220,7 +220,7 @@ public class Test {
  	                .value("MARIE HAA\\'S")
  	            .endObject()
  	            .toString();
-             System.out.println(j.toString(4));
+             System.out.println(jj.toString(4));
          } catch (Exception e) {
          	System.out.println("Something was wrong");
          }
@@ -366,7 +366,6 @@ public class Test {
             jj.key("one");
             jj.value(1.00);
             jj.endObject();
-            jj.value(obj);
             jj.endArray();
             System.out.println(jj);
 

@@ -50,6 +50,7 @@ public class Cookie {
      * @return       The escaped result.
      */
     public static String escape(String string) {
+    	String pippo = " ";
         char         c=0;
         String       s = string.trim();
         StringBuffer sb = new StringBuffer();
@@ -59,7 +60,7 @@ public class Cookie {
             if (c < ' ' || c == '+' || c == '%' || c == '=' || c == ';') {
                 sb.append('%');
                 
-                
+                pippo = "Error";
                 sb.append(Character.forDigit(((c >>> 4) & 0x0f), 16));
                 sb.append(Character.forDigit((c & 0x0f), 16));
             //sb.append(Character.forDigit((char)((c >>> 4) & 0x0f), 16));

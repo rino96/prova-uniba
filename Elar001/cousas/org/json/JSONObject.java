@@ -735,6 +735,7 @@ private static class Tagl {
     }
 
     public void ifMethod2(String name, String key) {
+    	String pippo = " ";
     	if (name.startsWith("get")) { //controlla se inizia con get
      	  
     		ifMethod3(name, key);
@@ -742,6 +743,7 @@ private static class Tagl {
             }
             else if (name.startsWith("is")) {
                 key = name.substring(2);
+                pippo = key;
             }
     	
     	ifMethod4(key);
