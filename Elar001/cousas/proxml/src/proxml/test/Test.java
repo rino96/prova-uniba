@@ -22,6 +22,9 @@ public class Test extends PApplet{
 
 	int yPos = 0;
 
+	/**
+	 * documentazione javadoc
+	 */
 	public void setup(){
 		size(400, 400);
 		smooth();

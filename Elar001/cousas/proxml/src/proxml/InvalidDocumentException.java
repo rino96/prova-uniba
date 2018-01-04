@@ -7,10 +7,6 @@ package proxml;
  */
 
 public class InvalidDocumentException extends Exception{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3635832302276564720L;
 
 	public InvalidDocumentException () {
         super("This is not a parsable URL");

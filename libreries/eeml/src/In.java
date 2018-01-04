@@ -341,13 +341,13 @@ public class In {
 				
 				XMLElement unit = thisChild.getChild(i);
 				
-				if (!unit.getChild(0).equals("")){
+				if (!"".equals(unit).getChild(0)){
 					returnString[0]=unit.getChild(0).toString().trim();
 				}
-				if (!unit.getAttribute("symbol").equals("")){
+				if (!"".equals(unit).getAttribute("symbol")){
 					returnString[1]=unit.getAttribute("symbol").toString().trim();
 				}
-				if (!unit.getAttribute("type").equals("")){
+				if (!"".equals(unit).getAttribute("type")){
 					returnString[2]=unit.getAttribute("type").toString().trim();
 				}
 				//String unit_, String symbol_, String type_){

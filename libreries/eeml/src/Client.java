@@ -1,6 +1,3 @@
-//mio
-/* -*- mode: jde; c-basic-offset: 2; indent-tabs-mode: nil -*- */
-
 /*
   PClient - basic network client implementation
   Part of the Processing project - http://processing.org
@@ -31,7 +28,12 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 
-
+/**
+ * classe principale
+ * documentazione javaDoc 
+ * @author vincy
+ *
+ */
 final class Client implements Runnable {
 
 	PApplet parent;
@@ -48,12 +50,31 @@ final class Client implements Runnable {
 
 	InputStream input;
 	OutputStream output;
+	
+	int bufferIndex;//vincenza
+	int bufferLast;//vincenza
 
-	byte buffer[] = new byte[32768];
-	int bufferIndex;
-	int bufferLast;
+	private final static int BUFFER_SIZE=32768;//mio
+	
+	/**
+	 * la funzione crea un nuovo buffer
+	 * @return new byte
+	 */
+    public static byte[] createNewBuffer() {
+      try {
+        return new byte[BUFFER_SIZE];
+      } catch (OutOfMemoryError error) { 
+        return new byte[0];
+        }
+    }
+	
 
-
+/**
+ * documentazione javaDoc
+ * @param parent
+ * @param host
+ * @param port
+ */
 	public Client(PApplet parent, String host, int port) {
 		this.parent = parent;
 		this.host = host;
@@ -122,8 +143,12 @@ final class Client implements Runnable {
 	public void dispose() {
 		try {
 			// do io streams need to be closed first?
-			if (input != null) input.close();
-			if (output != null) output.close();
+			if (input != null) {
+				input.close();
+			}
+			if (output != null) {
+				output.close();
+			}
 
 		} catch (Exception e) {
 			System.out.println("Something was wrong");
@@ -133,7 +158,9 @@ final class Client implements Runnable {
 		output = null;
 
 		try {
-			if (socket != null) socket.close();
+			if (socket != null) {
+				socket.close();
+			}
 
 		} catch (Exception e) {
 			System.out.println("Something was wrong");
@@ -143,9 +170,9 @@ final class Client implements Runnable {
 
 	//____________________________________________________________________
 	
-	public void whileMethod(Thread th, InputStream in, byte buf[], int bufL, int cl, PApplet p, String h) {//mio
+	public void whileMethod(Thread th, InputStream in, byte[] buf, int bufL, int cl, PApplet p, String h) {//mio
 		Thread a=Thread.currentThread();//mio
-		while (a == thread) {
+		while (a.equals(thread)) {//a == thread
 			
 			tryWhileMethod(input, buffer, bufferLast, thread, clientEventMethod, parent, host);
 			
@@ -153,7 +180,7 @@ final class Client implements Runnable {
 	}
 	
 	
-	public void tryWhileMethod(InputStream in, byte buf[], int bufL, Thread th, int cl, PApplet p, String h ) {//mio
+	public void tryWhileMethod(InputStream in, byte[] buf, int bufL, Thread th, int cl, PApplet p, String h ) {//mio
 		try {
 				whileTryMethod(input, buffer, bufferLast);
 			
@@ -166,7 +193,7 @@ final class Client implements Runnable {
 		}
 	}
 	
-	public void whileTryMethod(InputStream in, byte buf[], int bufL) {
+	public void whileTryMethod(InputStream in, byte[] buf, int bufL) {
 		int a1 = input.available();//mio
 		while ((input != null) &&
 				(a1 > 0)) {  // this will block
@@ -177,16 +204,16 @@ final class Client implements Runnable {
 		}
 
 
-	public void synchronizedMethod (byte buf[], int bufL) {
+	public void synchronizedMethod (byte[] buf, int bufL) {
 		
 		ifWhileMethod(buffer, bufferLast);
 		
 		buffer[bufferLast++] = (byte) input.read();
 	}
 	
-	public void ifWhileMethod(byte buf[], int bufL) {
+	public void ifWhileMethod(byte[] buf, int bufL) {
 		if (bufferLast == buffer.length) {
-			byte temp[] = new byte[bufferLast << 1];
+			byte[] temp = new byte[bufferLast << 1];
 			System.arraycopy(buffer, 0, temp, 0, bufferLast);
 			buffer = temp;
 		}
@@ -226,13 +253,13 @@ final class Client implements Runnable {
 
 	public void run() {
 		try{
-			Thread th;
-			InputStream in;
-			byte buf[];
-			int bufL;
-			int cl;//mio
-			PApplet p;
-			String h;
+			Thread th=null;
+			InputStream in=null;
+			byte[] buf=null;
+			int bufL=0;
+			int cl=0;//mio
+			PApplet p=null;
+			String h=null;
 			
 			whileMethod(th, in, buf, bufL, cl, p, h);
 			
@@ -276,7 +303,9 @@ final class Client implements Runnable {
 	 * first check available() to see if things are ready to avoid this)
 	 */
 	public int read() {
-		if (bufferIndex == bufferLast) return -1;
+		if (bufferIndex == bufferLast) {
+			return -1;
+		}
 
 		synchronized (buffer) {
 			int outgoing = buffer[bufferIndex++] & 0xff;
@@ -294,7 +323,9 @@ final class Client implements Runnable {
 	 * Returns -1, or 0xffff, if nothing is there.
 	 */
 	public char readChar() {
-		if (bufferIndex == bufferLast) return (char)(-1);
+		if (bufferIndex == bufferLast) {
+			return (char)(-1);
+		}
 		return (char) read();
 	}
 
@@ -306,11 +337,13 @@ final class Client implements Runnable {
 	 * readBytes(byte b[]) (see below).
 	 */
 	public byte[] readBytes() {
-		if (bufferIndex == bufferLast) return null;
+		if (bufferIndex == bufferLast) {
+			return new byte[0];//vincenza
+		}
 
 		synchronized (buffer) {
 			int length = bufferLast - bufferIndex;
-			byte outgoing[] = new byte[length];
+			byte[] outgoing = new byte[length];
 			System.arraycopy(buffer, bufferIndex, outgoing, 0, length);
 
 			bufferIndex = 0;  // rewind
@@ -329,12 +362,16 @@ final class Client implements Runnable {
 	 * are available than can fit into the byte array, only those
 	 * that will fit are read.
 	 */
-	public int readBytes(byte outgoing[]) {
-		if (bufferIndex == bufferLast) return 0;
+	public int readBytes(byte[] outgoing) {
+		if (bufferIndex == bufferLast) {
+			return 0;
+		}
 
 		synchronized (buffer) {
 			int length = bufferLast - bufferIndex;
-			if (length > outgoing.length) length = outgoing.length;
+			if (length > outgoing.length) {
+				length = outgoing.length;
+			}
 			System.arraycopy(buffer, bufferIndex, outgoing, 0, length);
 
 			bufferIndex += length;
@@ -353,7 +390,9 @@ final class Client implements Runnable {
 	 * the serial buffer, then 'null' is returned.
 	 */
 	public byte[] readBytesUntil(int interesting) {
-		if (bufferIndex == bufferLast) return null;
+		if (bufferIndex == bufferLast) {
+			return new byte[0];//vincenza
+		}
 		byte what = ' ';//mio
 
 		synchronized (buffer) {
@@ -364,10 +403,12 @@ final class Client implements Runnable {
 					break;
 				}
 			}
-			if (found == -1) return null;
+			if (found == -1) {
+				return new byte[0];//vincenza
+			}
 
 			int length = found - bufferIndex + 1;
-			byte outgoing[] = new byte[length];
+			byte[] outgoing = new byte[length];
 			System.arraycopy(buffer, bufferIndex, outgoing, 0, length);
 
 			bufferIndex = 0;  // rewind
@@ -387,8 +428,10 @@ final class Client implements Runnable {
 	 * If nothing is in the buffer, zero is returned.
 	 * If 'interesting' byte is not in the buffer, then 0 is returned.
 	 */
-	public int readBytesUntil(int interesting, byte outgoing[]) {
-		if (bufferIndex == bufferLast) return 0;
+	public int readBytesUntil(int interesting, byte[] outgoing) {
+		if (bufferIndex == bufferLast) {
+			return 0;
+		}
 		byte what = ' ';//mio
 
 		synchronized (buffer) {
@@ -399,7 +442,9 @@ final class Client implements Runnable {
 					break;
 				}
 			}
-			if (found == -1) return 0;
+			if (found == -1) {
+				return 0;
+			}
 
 			int length = found - bufferIndex + 1;
 			if (length > outgoing.length) {
@@ -430,7 +475,9 @@ final class Client implements Runnable {
 	 * (i.e. UTF8 or two-byte Unicode data), and send it as a byte array.
 	 */
 	public String readString() {
-		if (bufferIndex == bufferLast) return null;
+		if (bufferIndex == bufferLast) {
+			return null;
+		}
 		return new String(readBytes());
 	}
 
@@ -445,8 +492,10 @@ final class Client implements Runnable {
 	 * (i.e. UTF8 or two-byte Unicode data), and send it as a byte array.
 	 */
 	public String readStringUntil(int interesting) {
-		byte b[] = readBytesUntil(interesting);
-		if (b == null) return null;
+		byte[] b = readBytesUntil(interesting);
+		if (b == null) {
+			return null;
+		}
 		return new String(b);
 	}
 
@@ -465,7 +514,7 @@ final class Client implements Runnable {
 	}
 
 
-	public void write(byte bytes[]) {
+	public void write(byte[] bytes) {
 		try {
 			output.write(bytes);
 			output.flush();   // hmm, not sure if a good idea

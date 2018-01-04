@@ -50,7 +50,7 @@ public class HTTPTokener extends JSONTokener {
      * @return A String.
      */
     public static String forMethod(char c, char q, StringBuffer sb ) {//mio
-    	 for (;;) {
+    	 while(c < ' ') {
              c = next();
              if (c < ' ') {
                  throw syntaxError("Unterminated string.");
@@ -69,8 +69,8 @@ public class HTTPTokener extends JSONTokener {
         } 
     }
     public String nextToken() throws JSONException {
-        char c;
-        char q;
+        char c=0;
+        char q=0;
         StringBuffer sb = new StringBuffer();
         boolean i=Character.isWhitespace(c);//mio
         do {
@@ -81,7 +81,7 @@ public class HTTPTokener extends JSONTokener {
         
         ifMethod(c, q, sb);
         
-        for (;;) {
+        while(c == 0) {
             if (c == 0 || Character.isWhitespace(c)) {
                 return sb.toString();
             }

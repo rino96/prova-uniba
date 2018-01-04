@@ -1,5 +1,3 @@
-/* -*- mode: jde; c-basic-offset: 2; indent-tabs-mode: nil -*- */
-
 /*
   PServer - basic network server implementation
   Part of the Processing project - http://processing.org
@@ -31,7 +29,12 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
-
+/**
+ * classe principale
+ * documentazione JavaDoc
+ * @author vincy
+ *
+ */
 final class Server implements Runnable {
 
   PApplet parent;
@@ -42,11 +45,15 @@ final class Server implements Runnable {
   int port;
   Vector clients;  // people payin the bills
 
-
+/**
+ * 
+ * @param parent
+ * @param port
+ */
   public Server(PApplet parent, int port) {
     this.parent = parent;
     this.port = port;
-
+    
     //parent.attach(this);
 
     try {
@@ -87,11 +94,7 @@ final class Server implements Runnable {
   }
 
 
-  // the last index used for available. can't just cycle through
-  // the clients in order from 0 each time, because if client 0 won't
-  // shut up, then the rest of the clients will never be heard from.
-  int lastAvailable = -1;
-
+  
   /**
    * Returns the next client in line that has something to say.
    */
@@ -99,7 +102,9 @@ final class Server implements Runnable {
     synchronized (clients) {
       int clientCount = clients.size();
       int index = lastAvailable + 1;
-      if (index >= clientCount) index = 0;
+      if (index >= clientCount) {
+    	  index = 0;
+      }
 
       for (int i = 0; i < clientCount; i++) {
         int which = (index + i) % clientCount;
@@ -152,7 +157,9 @@ final class Server implements Runnable {
     }
   }
 
-
+/**
+ * documentazione javaDoc
+ */
   public void run() throws InterruptedException{
 	  Lock lock = new Lock();
 	  Thread f= Thread.currentThread();//mio
@@ -181,7 +188,7 @@ final class Server implements Runnable {
 		      } catch (InterruptedException ex) {
 		    	  System.out.println("DEscription error");//mio
 		      }
-	    while (f == thread) {
+	    while (f.equals(thread)) {//f == thread
 	    System.out.println(" ");
 	    }  
 	  }
@@ -205,7 +212,7 @@ final class Server implements Runnable {
    * Write a byte array to all the connected clients.
    * See Client.write() for operational details.
    */
-  public void write(byte bytes[]) {
+  public void write(byte[] bytes) {
     Enumeration en = clients.elements();
     while (en.hasMoreElements()) {
       Client client = (Client) en.nextElement();

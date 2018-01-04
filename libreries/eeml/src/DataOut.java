@@ -322,11 +322,7 @@ public class DataOut extends Thread {
 					eventMethod = null;
 				}
 				while (running) { 
-					
-
-					if ((eventMethod != null) & (dataOut.hasClient())) {
-						
-					}
+					System.out.println("Running dataOut.");
 				}
 
 			} catch (Exception e) {
@@ -338,7 +334,7 @@ public class DataOut extends Thread {
 	}
 
 	/**
-	 * Ignore.
+	 * documentazione javadoc.
 	 */
 	private void quit()
 	{

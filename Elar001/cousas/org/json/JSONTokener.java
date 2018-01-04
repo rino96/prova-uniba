@@ -135,7 +135,7 @@ public class JSONTokener {
      * @return The next character, or 0 if past the end of the source string.
      */
     public char next() throws JSONException {
-        int c;
+        int c=0;
         if (this.usePrevious) {
         	this.usePrevious = false;
             c = this.previous;
@@ -217,7 +217,7 @@ public class JSONTokener {
      * @return  A character, or 0 if there are no more characters.
      */
     public char nextClean() throws JSONException {
-        for (;;) {
+        while(c == 0) {
             char c = next();
             if (c == 0 || c > ' ') {
                 return c;
@@ -254,10 +254,15 @@ public class JSONTokener {
     }
     public static String switchMethod(char c,String sb ) {//mio
     	   switch (c) {
-           case 0:
+           case 0: 
+        	   		System.out.println("error");
+        	   		break;
            case '\n':
+        	   		System.out.println("Undeterminate string");
+        	   		break;
            case '\r':
                throw syntaxError("Unterminated string");
+               break;
            case '\\':
                c = next();
                switch1Method(c,sb);
@@ -268,18 +273,20 @@ public class JSONTokener {
                    return sb;//qui
                }
                sb.append(c);
+               break;
            }
     }
     public static void forMethod(char c, String sb) {//mio
-    	for (;;) {
+    	int pippo = 1;
+    	while (pippo == 1) {
             c = next();
             switchMethod(c, sb);
          
         }
     }
     public String nextString(char quote) throws JSONException {
-        char c;
-        String sb;
+        char c=0;
+        String sb=null;
         forMethod(c, sb);
         
     }
@@ -293,7 +300,7 @@ public class JSONTokener {
      */
     public String nextTo(char d) throws JSONException {
         StringBuffer sb = new StringBuffer();
-        for (;;) {
+        while(c == 0) {
             char c = next();
             if (c == d || c == 0 || c == '\n' || c == '\r') {
                 if (c != 0) {
@@ -313,9 +320,9 @@ public class JSONTokener {
      * @return A string, trimmed.
      */
     public String nextTo(String delimiters) throws JSONException {
-        char c;
+        char c=0;
         StringBuffer sb = new StringBuffer();
-        for (;;) {
+        while (c == 0) {
             c = next();
             if (delimiters.indexOf(c) >= 0 || c == 0 ||
                     c == '\n' || c == '\r') {
@@ -338,13 +345,17 @@ public class JSONTokener {
      */
     public static String switch2Method(char c) {//mio
     	switch (c) {
-        case '"':
+        case '"': 
+        	System.out.println(" ");
+        	break;
         case '\'':
             return nextString(c);
         case '{':
             back();
             return new JSONObject(this);
         case '[':
+        	System.out.println(" ");
+        	break;
         case '(':
             back();
             return new JSONArray(this);
@@ -355,7 +366,7 @@ public class JSONTokener {
     }
        public String nextValue() throws JSONException {
         char c = nextClean();
-        String s;
+        String s=null;
         switch2Method(c);
         
         /*
@@ -376,7 +387,7 @@ public class JSONTokener {
         back();
 
         s = sb.toString().trim();
-        if (s.equals("")) {
+        if ("".equals(s)) {
             throw syntaxError("Missing value");
         }
        
@@ -392,7 +403,7 @@ public class JSONTokener {
      * is not found.
      */
     public char skipTo(char to) throws JSONException {
-        char c;
+        char c=0;
         try {
             int startIndex = this.index;
             int startCharacter = this.character;

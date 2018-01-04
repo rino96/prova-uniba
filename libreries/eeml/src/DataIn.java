@@ -202,7 +202,6 @@ public class DataIn extends Thread {
 		return dataIn.countDatastreams();   	
 	}
 
-/*
 	/**
 	 * Returns the "age" of the remote data. For example, Pachube may return data
 	 * almost immediately, but the data it returns may have been cached some time before.
@@ -214,12 +213,7 @@ public class DataIn extends Thread {
 	 * </pre>
 	 * @return
 	 */
-	/*
-	public int getAge() {       
-		int value = dataIn.getAge();
-		return value;
-	}
-*/
+	
 	/**
 	 * Useful for debugging; returns the entire EEML document received.
 	 */
@@ -276,9 +270,7 @@ public class DataIn extends Thread {
 				//System.out.println("Finished update");
 
 				
-				if (eventMethod != null) {
 				
-				}
 
 				//System.out.println("about to sleep.......");
 				//System.out.println("finished sleeping......");
@@ -331,10 +323,6 @@ public class DataIn extends Thread {
 	}
 
 	
-	
-	
-	
-	
 	/**
 	 * Ignore.
 	 */
@@ -344,15 +332,5 @@ public class DataIn extends Thread {
 		exmlThread = null;
 		interrupt();
 	}
-
-	
-	/*  needs proper debugging
-    public String xmlString(){
-
-    	return dataIn.xmlString();
-
-    }
-	 */
-
 
 }

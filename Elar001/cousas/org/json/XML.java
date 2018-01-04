@@ -76,7 +76,7 @@ public class XML {
      * @return The escaped string.
      */
     
-    static class xml1 {
+    private class xml1 {
     	
 
     public static String escape(String string) {
@@ -189,7 +189,7 @@ public class XML {
     }
     
     public static boolean if2Method(XMLTokener x, Object t,  String s) {
-    	 if (t.equals("CDATA")) {
+    	 if ("CDATA".equals(t)) {
     		 
     		 if4Method(x, s);
     		 
@@ -258,7 +258,8 @@ public class XML {
     }
     
     public static boolean forMethod(XMLTokener x, Object t, String s, JSONObject o ) {
-    	for (;;) {
+    	int pippo = 1;
+    	while (pippo == 1) {
     		
     		if9Method(t,x);
     		
@@ -286,13 +287,13 @@ public class XML {
             
 //Empty tag <.../>
 
-        } else if (t == SLASH) {
+        } else if (t.equals(SLASH)) {// t== SLASH
         	
         	if13Method( o, context, n, x);
 
 //Content, between <...> and </...>
 
-        } else if (t == GT) {
+        } else if (t.equals(GT)) {// t == GT
         	
         	for2Method(n, t, s, o, context, x);
         	
@@ -303,7 +304,7 @@ public class XML {
     }
     
     public static boolean if11Method(Object t, XMLTokener x, JSONObject o, String s) {
-    	if (t == EQ) {
+    	if (t.equals(EQ)) {//t == EQ
             t = x.nextToken();
             
             if12Method(t, x);
@@ -341,7 +342,8 @@ public class XML {
     }
     
     public static boolean for2Method(String n, Object t, String s, JSONObject o,  JSONObject context, XMLTokener x) {
-    	 for (;;) {
+    	int pippo = 1; 
+    	while (pippo == 1) {
              t = x.nextContent();
              
              if15Method(n, t, s, o, context, x);
@@ -361,7 +363,7 @@ public class XML {
              
 //Nested element
 
-         } else if (t == LT) {
+         } else if (t.equals(LT)) {//t == LT
         	 
         	 if18Method( o, context, n, x);
         	 
@@ -412,12 +414,12 @@ public class XML {
      */
     private static boolean parse(XMLTokener x, JSONObject context,
                                  String name) throws JSONException {
-        char       c;
-        int        i;
-        String     n;
+        char       c=0;
+        int        i=0;
+        String     n=null;
         JSONObject o = null;
-        String     s;
-        Object     t;
+        String     s=null;
+        Object     t=null;
 
 // Test for and skip past these forms:
 //      <!-- ... -->
@@ -580,7 +582,7 @@ public static String ifStringMethod(Object o, String tagName, StringBuffer b, Ob
    }
    
    public static String ifKMethod(int i, StringBuffer b, JSONArray ja, Object v, String k, int len) {
-	   if (k.equals("content")) {
+	   if ("content".equals(k)) {
 		   
 		   ifVMethod(i, b, ja, v, len);
 		   
@@ -593,7 +595,7 @@ public static String ifStringMethod(Object o, String tagName, StringBuffer b, Ob
            
          forI2Method(i, v, b, k, len, ja);
            
-       } else if (v.equals("")) {
+       } else if ("".equals(v)) {
            b.append('<');
            b.append(k);
            b.append("/>");
@@ -665,15 +667,15 @@ public static String ifStringMethod(Object o, String tagName, StringBuffer b, Ob
      */
     public static String toString(Object o, String tagName)
             throws JSONException {
-        String b;//mio
-        int          i;
-        JSONArray    ja;
-        JSONObject   jo;
-        String       k;
-        Iterator     keys;
-        int          len;
-        String       s;
-        Object       v;
+        String b=null;//mio
+        int          i=0;
+        JSONArray    ja=null;
+        JSONObject   jo=null;
+        String       k=null;
+        Iterator     keys=null;
+        int          len=0;
+        String       s=null;
+        Object       v=null;
         
         ifStringMethod( o, tagName, b, v, jo, keys, k, s, len, ja);
     }

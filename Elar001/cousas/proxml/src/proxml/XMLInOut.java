@@ -1,4 +1,6 @@
- package eeml;
+package eeml;
+
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
@@ -31,7 +32,34 @@ import processing.core.PApplet;
  * @example proxml
  * @related XMLElement
  */
+
+    
 final class XMLInOut{
+	/**
+	 * 
+	 * @author
+	 * @return
+	 * 
+	 */
+	private class SpecificException extends Exception {//mio da qui
+
+	    public SpecificException() {
+	      super();
+	    }
+	  }
+	/**
+	 * 
+	 * @author
+	 * @return
+	 * 
+	 */
+	  private class Solution {
+	    public void compute(Object subject) throws SpecificException {
+	      if (subject == null) {
+	        throw new SpecificException();
+	      }
+	      // ...
+	    }//a qui
 
 	private String pachubeAPIKey = "";
 	
@@ -65,7 +93,7 @@ final class XMLInOut{
 	 * @related saveElement ( )
 	 */
 	public XMLElement loadElementFrom(final String documentUrl, final String key){
-		Loader loader;
+		Loader loader= null;
 		pachubeAPIKey = key;
 		if (documentUrl.startsWith("<?xml")){
 			loader = new Loader(new StringReader(documentUrl),null);
@@ -87,6 +115,11 @@ final class XMLInOut{
 			throw new Exception("proXML was not able to read the given xml-file: " + documentUrl + " Please make sure that you load a file that contains valid xml.");
 		}
 	}
+	
+	/**
+	 * documentazione javaDoc
+	 * @param pApplet
+	 */
 	public XMLInOut(final PApplet pApplet){
 		this.pApplet = pApplet;
 		parent = pApplet;
@@ -98,17 +131,18 @@ final class XMLInOut{
 		}
 	}
 	static String getSource(){
-		char iChar;//mio int 
-		StringBuffer result = new StringBuffer();
+		int iChar=0;//mio int 
+		StringBuffer result1 = new StringBuffer();
+		BufferedReader keep=null;
 		iChar = keep.read();
 		try{
 			while (iChar != -1){
-				result.append(iChar);//mio
+				result1.append(iChar);//mio
 			}
 		}catch (Exception e){
 			return ("fails");
 		}
-		return result.toString();
+		return result1.toString();
 	}
 	/**
 	 * Parses a given String and gives back box with the parsed Element and the
@@ -116,60 +150,89 @@ final class XMLInOut{
 	 * @param toParse String
 	 * @return BoxToParseElement
 	 */
-	public XMLElement parseDocument(Reader doc){
+	public void ifcase(boolean bText, String sbText) {//mio
+		if (bText){
+			bText = false;
+			actualElement.addChild(new XMLElement(sbText.toString(), true));
+			sbText = " ";
+		}
+	}
+	
+	/**
+	 * documentazione javaDoc
+	 * @param iChar
+	 * @param cChar
+	 * @param aux
+	 * @param document
+	 */
+	public void ifcase1(int iChar, int cChar, int aux,BufferedReader document) {//mio
+		if (iChar != -1){ //check the next sign...
+			cChar = iChar; //get its char value..
+			 aux = cCharControl(cChar, iChar, document);
+		}
+	}
+	public void ifcase3(int cChar, String sbText, BufferedReader document) {//mio
+		if (cChar == '&'){
+			document = handleEntity(document, sbText);
+		}else{
+			sbText.append(cChar);
+		}
+	}
+	public void ifcase2(int cChar, boolean bText, BufferedReader document, String sbText) {//mio
+		if (!(cChar == ' ' && !bText)){
+			bText = true;
+			ifcase3(cChar, sbText, document);
+			
+		}
+	}
+	public void switchMethod(int iChar, int cChar, int aux, boolean bText, String sbText, BufferedReader document) {//mio
+		switch (cChar){ //check the char value
+		case '\n':
+		int line=0;
+		line++;
+			break;
+		case '\f':
+			break;
+		case '\r':
+			break;
+		case '\t':
+			break;
+		case '<': //this opens a tag so...
+			ifcase(bText,sbText);
+			iChar = document.read();
+			ifcase1(iChar,cChar, aux, document);
+			
+			if (aux ==0)
+			document = handleStartTag(document, new StringBuffer().append(cChar));
 
-		firstTag = true;
-		rootNode = true;
+			break;
+			
+		default:
+			ifcase2(cChar, bText,document, sbText);
+			
+			break;
+	}
+	}
+	public void whileMethod(int aux, int iChar, int cChar, boolean bText, String sbText, BufferedReader document) {//mio
+		while (iChar != -1){ //as long there is something to read
+			cChar = iChar; //get the current char value
+			switchMethod(iChar, cChar, aux, bText, sbText, document);
+		
+		}
+	}
+	public XMLElement parseDocument(Reader doc){
 		
 		int aux = 0;
-		char iChar; //keeps the int value of the current char
-		char cChar; //keeps the char value of the current char
+		int iChar=0; //keeps the int value of the current char
+		int cChar=0; //keeps the char value of the current char
 
 		String sbText = " "; //StringBuffer to parse words in
 		boolean bText = false; //has a word been parsed
+		BufferedReader document=null;
 		iChar = document.read();
 		try{
-			while (iChar != -1){ //as long there is something to read
-				cChar = iChar; //get the current char value
-				switch (cChar){ //check the char value
-					case '\n':
-						line++;
-						break;
-					case '\f':
-						break;
-					case '\r':
-						break;
-					case '\t':
-						break;
-					case '<': //this opens a tag so...
-						if (bText){
-							bText = false;
-							actualElement.addChild(new XMLElement(sbText.toString(), true));
-							sbText = " ";
-						}
-						
-						iChar = document.read();
-						if (iChar != -1){ //check the next sign...
-							cChar = iChar; //get its char value..
-							 aux = cCharControl(cChar, iChar);
-						}
-						if (aux ==0)
-						document = handleStartTag(document, new StringBuffer().append(cChar));
-
-						break;
-						
-					default:
-						if (!(cChar == ' ' && !bText)){
-							bText = true;
-							if (cChar == '&'){
-								document = handleEntity(document, sbText);
-							}else{
-								sbText.append(cChar);
-							}
-						}
-						break;
-				}
-			}
+			whileMethod(aux, iChar, cChar, bText, sbText, document);
+			
 		}catch (Exception e){
 			System.out.println("Something was wrong");
 		}
@@ -177,7 +240,7 @@ final class XMLInOut{
 	}
 	
 	
-	public int cCharControl(char cChar, char iChar)	{
+	public int cCharControl(int cChar, int iChar, BufferedReader document)	{
 		
 		if (cChar == '/'){ //in this case we have an end tag
 			document = handleEndTag(result, document); // and handle it
@@ -204,7 +267,11 @@ final class XMLInOut{
 		} else return 0;
 	}
 		
-	
+	/**
+	 * documentazione javaDoc
+	 * @author vincy
+	 *
+	 */
 	private class Loader implements Runnable{
 
 		/**
@@ -220,9 +287,9 @@ final class XMLInOut{
 		/**
 		 * Object handling the incoming XML
 		 */
-		Object xmlHandler;
+		String xmlHandler;
 
-		Loader(final Reader i_document, final Object i_xmlHandler){
+		Loader(final Reader i_document, final String i_xmlHandler){
 			document = i_document;
 			xmlHandler = i_xmlHandler;
 		}
@@ -235,8 +302,26 @@ final class XMLInOut{
 
 		private int line = 0;
 
-	
+	/**
+	 * documentazione javaDoc
+	 */
+		XMLElement xmlElement; //vincenza
 		
+		private int xmlEventMethod;//vincenza
+		private final PApplet pApplet;//vincenza
+		private final String parent;//vincenza
+		
+		/**
+		 * the parent element to put the children elements in while parsing
+		 */
+		private XMLElement actualElement;//vincenza
+
+		/**
+		 * the result element for loading a document
+		 */
+		private XMLElement result;//vincenza
+
+
 
 		/**
 		 * Parses a TemplateTag and extracts its Name and Attributes.
@@ -245,7 +330,7 @@ final class XMLInOut{
 		 * @return Reader
 		 * @throws Exception
 		 */
-		public Reader handleStartTag(Reader page, StringBuffer alreadyParsed) throws Exception{
+		public Reader handleStartTag(Reader page, StringBuffer alreadyParsed) throws SpecificException{//qui
 			int iChar;
 			char cChar;
 
@@ -254,7 +339,6 @@ final class XMLInOut{
 			boolean bLeftAttribute = false;
 
 			StringBuffer sbTagName = alreadyParsed;
-			String sbAttributeName = " ";
 			String sbAttributeValue = " ";
 			StringBuffer sbActual = sbTagName;
 
@@ -277,83 +361,130 @@ final class XMLInOut{
 
 			throw new Exception("Error in line:"+line);
 		}
-		public Reader whileMethodControl(Reader page, StringBuffer alreadyParsed,int iChar,char cChar,
-				boolean bTagName,boolean bSpaceBefore, boolean bLeftAttribute,StringBuffer sbTagName,
-				String sbAttributeValue,StringBuffer sbActual,Hashtable attributes,
-				boolean inValue,char oChar) {
-			cChar = iChar;
-			switch (cChar){
-				case ' ':
-					if ((!bSpaceBefore) && (!inValue) &&  (bTagName) )
-						bTagName = false;
-						else{
-								String sAttributeName = sbAttributeName.toString();
-								String sAttributeValue = sbAttributeValue.toString();
-								attributes.put(sAttributeName, sAttributeValue);
-
-								sbAttributeName = " ";
-								sbAttributeValue = " ";
-								bLeftAttribute = false;
-								sbActual = sbAttributeName;
-								sbActual.append(cChar);
-						
-						}
-						bSpaceBefore = true;
-						break;
-				case '=':
-					if (!inValue){
-						sbActual = sbAttributeValue;
-						bLeftAttribute = true;
-					}else{
-						sbActual.append(cChar);
-					}
-					break;
-				case '"':
-					inValue = !inValue;
-					
-					bSpaceBefore = false;
-					break;
-				case '\'':
-					break;
-				case '/':
-					if (inValue)
-						sbActual.append(cChar);
-					break;
-				case '>':
-					if (bLeftAttribute){
+		
+		/**
+		 * documentazione javaDoc
+		 * @param bSpaceBefore
+		 * @param inValue
+		 * @param bTagName
+		 * @param sbAttributeName
+		 * @param sbAttributeValue
+		 * @param attributes
+		 * @param cChar
+		 * @param bLeftAttribute
+		 * @param sbActual
+		 */
+		public void ifcase3(boolean bSpaceBefore, boolean inValue, boolean bTagName, String sbAttributeName, 
+				String sbAttributeValue, Hashtable attributes, int cChar, boolean bLeftAttribute, String sbActual) {//mio
+			if ((!bSpaceBefore) && (!inValue) &&  (bTagName) )
+				bTagName = false;
+				else{
 						String sAttributeName = sbAttributeName.toString();
 						String sAttributeValue = sbAttributeValue.toString();
 						attributes.put(sAttributeName, sAttributeValue);
-					}
-					String sTagName = sbTagName.toString();
-					if (firstTag){
-						firstTag = false;
-						errorMethod(sTagName);
-						
-					}else{
-						if (rootNode && !firstTag){
-							rootNode = false;
-							result = new XMLElement(sTagName, attributes);
-							actualElement = result;
-						}else{
-							XMLElement keep = new XMLElement(sTagName, attributes);
-							actualElement.addChild(keep);
-							if (oChar != '/')
-								actualElement = keep;
-						}
-					}
-					break;
-					return page;
 
-				default:
-					bSpaceBefore = false;
-					sbActual.append(cChar);
-					break;
+						sbAttributeName = " ";
+						sbAttributeValue = " ";
+						bLeftAttribute = false;
+						sbActual = sbAttributeName;
+						sbActual.append(cChar);
+				
+				}
+		}
+		
+		/**
+		 * documentazione javaDoc
+		 * @param inValue
+		 * @param sbActual
+		 * @param sbAttributeValue
+		 * @param bLeftAttribute
+		 * @param cChar
+		 */
+		public void ifcase4(boolean inValue, String sbActual, String sbAttributeValue, boolean bLeftAttribute, int cChar ) {//mio
+			if (!inValue){
+				sbActual = sbAttributeValue;
+				bLeftAttribute = true;
+			}else{
+				sbActual.append(cChar);
 			}
+		}
+		public void ifcase5(boolean bLeftAttribute, String sbAttributeName, String sbAttributeValue, Hashtable attributes) {//mio
+			if (bLeftAttribute){
+				String sAttributeName = sbAttributeName.toString();
+				String sAttributeValue = sbAttributeValue.toString();
+				attributes.put(sAttributeName, sAttributeValue);
+			}
+		}
+		public void ifcase11( Hashtable attributes, String sTagName, int oChar) {//mio
+			if (firstTag){
+				firstTag = false;
+				errorMethod(sTagName);
+				
+			}else{
+				if (rootNode && !firstTag){
+					rootNode = false;
+					result = new XMLElement(sTagName, attributes);
+					actualElement = result;
+				}else{
+					XMLElement keep1 = new XMLElement(sTagName, attributes);
+					actualElement.addChild(keep1);
+					if (oChar != '/')
+						actualElement = keep1;
+				}
+			}
+		}
+		public Reader switchMethod1(int cChar, int iChar, String sbActual, boolean bSpaceBefore,boolean bTagName,
+				boolean inValue, StringBuffer sbTagName,
+				String sbAttributeValue, String sbAttributeName, Hashtable attributes, boolean bLeftAttribute, 
+				Reader page, int oChar) {//mio
+			switch (cChar){
+			case ' ':
+				ifcase3(bSpaceBefore, inValue, bTagName,  sbAttributeName, sbAttributeValue, attributes, cChar, bLeftAttribute,sbActual);
+				
+					bSpaceBefore = true;
+					break;
+			case '=':
+				ifcase4(inValue, sbActual, sbAttributeValue, bLeftAttribute, cChar);
+				
+				break;
+			case '"':
+				inValue = !inValue;
+				
+				bSpaceBefore = false;
+				break;
+			case '\'':
+				break;
+			case '/':
+				if (inValue)
+					sbActual.append(cChar);
+				break;
+			case '>':
+				ifcase5(bLeftAttribute,sbAttributeName, sbAttributeValue, attributes);
+				
+				String sTagName = sbTagName.toString();
+				ifcase11(attributes, sTagName, oChar);
+				
+				break;
+				return page;
+
+			default:
+				bSpaceBefore = false;
+				sbActual.append(cChar);
+				break;
+		}
+		}
+		public Reader whileMethodControl(Reader page, StringBuffer alreadyParsed,int iChar,int cChar,
+				boolean bTagName,boolean bSpaceBefore, boolean bLeftAttribute,StringBuffer sbTagName,
+				String sbAttributeValue,String sbActual,Hashtable attributes,
+				boolean inValue,int oChar) {
+			cChar = iChar;
+			String sbAttributeName;
+			switchMethod1(cChar, iChar, sbActual,bSpaceBefore, bTagName, inValue, sbTagName, sbAttributeValue, sbAttributeName, attributes, bLeftAttribute, page, oChar);
+			
 			oChar = cChar;
 		}
 public void errorMethod(String sTagName) {
-	if (!(sTagName.equals("doctype") || sTagName.equals("?xml")))
+	if (!("doctype".equals(sTagName)|| "?xml".equals(sTagName)))
 		throw new Exception("XML File has no valid header");
 }
 		/**
@@ -363,15 +494,15 @@ public void errorMethod(String sTagName) {
 		 * @return Reader
 		 * @throws Exception
 		 */
-		public Reader handleEndTag(XMLElement xmlEl, Reader toP) throws Exception{
+		public Reader handleEndTag(XMLElement xmlEl, Reader toP) throws SpecificException{//qui
 			Reader toParse;
 			int iChar;
-			char cChar;
+			int cChar;
 			iChar = toParse.read();
 			while (iChar != -1){
 				
 				cChar = iChar;
-				toParse = switchMethodEnd(cChar, toParse);
+				toParse = switchMethodEnd((char) cChar, toParse);
 			}
 			return toParse;
 			throw new Exception("Error in line:"+line);
@@ -406,10 +537,10 @@ public void errorMethod(String sTagName) {
 		 * @return Reader
 		 * @throws Exception
 		 */
-		public Reader handleComment(Reader toParse) throws Exception{
+		public Reader handleComment(Reader toParse) throws SpecificException{//qui
 			int iChar;
-			char cChar;
-			char prevChar = ' ';
+			int cChar;
+			int prevChar = ' ';
 			iChar = toParse.read();
 			while (iChar != -1){
 				cChar = iChar;
@@ -428,10 +559,10 @@ public void errorMethod(String sTagName) {
 		 * @return Reader
 		 * @throws Exception
 		 */
-		public Reader handleDoctypeSection(Reader toParse) throws Exception{
+		public Reader handleDoctypeSection(Reader toParse) throws SpecificException{//qui
 			int iChar;
-			char cChar;
-			char prevChar = ' ';
+			int cChar;
+			int prevChar = ' ';
 			
 			boolean entities = false;
 			iChar = toParse.read();
@@ -455,16 +586,16 @@ public void errorMethod(String sTagName) {
 		 * @return
 		 * @throws Exception
 		 */
-		public Reader handleEntity(Reader toParse, final StringBuffer stringBuffer) throws Exception{
+		public Reader handleEntity(Reader toParse, final StringBuffer stringBuffer) throws SpecificException{//qui
 			int iChar;
-			char cChar;
+			int cChar;
 			final StringBuffer result = new StringBuffer();
 			int counter = 0;
 			iChar = toParse.read();
 			while (iChar != -1){
 				cChar = iChar;
 				result.append(cChar);
-				stringBuffer = stringBufferMethod(cChar,stringBuffer,  result);
+				stringBuffer = stringBufferMethod((char) cChar,stringBuffer,  result);
 				
 					break;
 				}
@@ -476,21 +607,21 @@ public void errorMethod(String sTagName) {
 			return toParse;
 		}
 		
-		public StringBuffer stringBufferMethod(char cChar,StringBuffer stringBuffer, StringBuffer result) {
-			if (cChar == ';'){
-				final String entity = result.toString().toLowerCase();
-				if (entity.equals("lt;"))
-					stringBuffer.append("<");
-				else if (entity.equals("gt;"))
-					stringBuffer.append(">");
-				else if (entity.equals("amp;"))
-					stringBuffer.append("&");
-				else if (entity.equals("quot;"))
-					stringBuffer.append("\"");
-				else if (entity.equals("apos;"))
-					stringBuffer.append("'");	
+		public StringBuffer stringBufferMethod(char cC,StringBuffer sB, StringBuffer res) {
+			if (cC == ';'){
+				final String entity = res.toString().toLowerCase();
+				if ("lt;".equals(entity))
+					sB.append("<");
+				else if ("gt;".equals(entity))
+					sB.append(">");
+				else if ("amp;".equals(entity))
+					sB.append("&");
+				else if ("quot;".equals(entity))
+					sB.append("\"");
+				else if ("apos;".equals(entity))
+					sB.append("'");	
 		}
-			return stringBuffer;
+			return sB;
 		}
 
 		/**
@@ -499,28 +630,28 @@ public void errorMethod(String sTagName) {
 		 * @return
 		 * @throws Exception
 		 */
-		public Reader handleCDATASection(Reader toParse) throws Exception{
+		public Reader handleCDATASection(Reader toParse) throws SpecificException{//qui
 			int iChar;
 			char cChar;
-			StringBuffer result = new StringBuffer();
+			String result = " ";
 			int counter = 0;
 			boolean checkedCDATA = false;
-			XMLElement keep = new XMLElement(result.toString());
+			XMLElement keep2 = new XMLElement(result.toString());
 			iChar = toParse.read();
 			while (iChar != -1){
-				cChar = iChar;
+				//cChar = (char) iChar;
 				if (cChar == ']'){
 					
-					keep.cdata = true;
-					keep.pcdata = true;
-					actualElement.addChild(keep);
+					keep2.cdata = true;
+					
+					actualElement.addChild(keep2);
 					break;
 				}
 				result.append(cChar);
 				counter++;
 				if (counter > 5 && !checkedCDATA){
 					checkedCDATA = true;
-					if (!result.toString().toUpperCase().equals("CDATA["))
+					if (!"CDATA[".toString().toUpperCase().equals(result))
 						throw new Exception(
 							"Illegal use of <![. " + 
 							"These operators are used to start a CDATA section. <![CDATA[]]>" +
@@ -540,7 +671,7 @@ public void errorMethod(String sTagName) {
 			//if(oChar != '/')actualElement = keep;
 			return toParse;
 		}
-		XMLElement xmlElement;
+		
 		public void run(){
 			
 			//xmlElement = parseDocument(document);
@@ -567,26 +698,15 @@ public void errorMethod(String sTagName) {
 	 */
 	//private static final String docStart = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
 
-	/**
-	 * the parent element to put the children elements in while parsing
-	 */
-	private XMLElement actualElement;
-
-	/**
-	 * the result element for loading a document
-	 */
-	private XMLElement result;
-
+	
 	/**
 	 * Parent PApplet instance
 	 */
-	private final PApplet pApplet;
-	private final Object parent;
-
+	
 	/**
 	 * Method to call when xml is loaded
 	 */
-	private int xmlEventMethod;
+	
 
 	/**
 	 * Initializes a new XMLInOut Object for loading and saving XML files. If you give
@@ -601,7 +721,7 @@ public void errorMethod(String sTagName) {
 	 * @param pApplet PApplet, the Applet proXML is running in
 	 * @param i_parent Object, the object that contains the xmlEvent function
 	 */
-	public XMLInOut(final PApplet pApplet, final Object i_parent){
+	public XMLInOut(final PApplet pApplet, final String i_parent){
 		this.pApplet = pApplet;
 		parent = i_parent;
 
@@ -625,7 +745,7 @@ public void errorMethod(String sTagName) {
 		    HttpURLConnection connection = (HttpURLConnection)(new URL(filename)).openConnection() ;
 		    // Set properties of the connection
 		    connection.setRequestMethod("GET");
-		    if (!pachubeAPIKey.equals("")){
+		    if (!"".equals(pachubeAPIKey)){
 		    connection.setRequestProperty("X-PachubeApiKey", pachubeAPIKey);
 		    }
 		 
@@ -643,10 +763,7 @@ public void errorMethod(String sTagName) {
 		    	System.out.println("There was an error accessing URL: " + filename);
 		    	stream = connection.getErrorStream();
 		    }
-			/*
-			URL url = new URL(filename);
-			stream = url.openStream();
-			*/
+			
 			return stream;
 
 		}catch (MalformedURLException e){
@@ -699,12 +816,13 @@ public void errorMethod(String sTagName) {
 	}
 	
 	
-	public InputStream loadFile(InputStream stream, String filename,  int aux ) {
+	public InputStream loadFile(InputStream stream, String filen,  int aux ) {
+		String filename = filen;
 		try{
 			File file = new File(pApplet.sketchPath, filename);
 			try{//mio
 				stream = new FileInputStream(file);
-				aux = ifStream(stream);
+				
 				if(aux == 1) return stream;
 				// have to break these out because a general Exception might
 				// catch the RuntimeException being thrown above
@@ -717,7 +835,11 @@ public void errorMethod(String sTagName) {
 				             }
 				           }
 				}
+	} catch (java.io.IOException e4) {
+		System.out.println("I/O Exception");
 	}
+	}
+
 	
 	
 	public int ifStream(InputStream stream) {
@@ -726,17 +848,8 @@ public void errorMethod(String sTagName) {
 		else return 0;
 	}
 	
-	private InputStream openStream(String filename){
-		InputStream stream = null;
-		String filenameActual = " ";
-		int aux = 0;
-
-		stream = connessione(filename,stream);
-		// if not online, check to see if the user is asking for a file
-		// whose name isn't properly capitalized. this helps prevent issues
-		// when a sketch is exported to the web, where case sensitivity
-		// matters, as opposed to windows and the mac os default where
-		// case sensitivity does not.
+	
+	public void ifcase7(String filename, String filenameActual, InputStream stream) {//mio
 		if (!pApplet.online){
 			try{
 				// first see if it's in a data folder
@@ -760,6 +873,41 @@ public void errorMethod(String sTagName) {
 			}
 		}
 
+	}
+	public InputStream ifMethod(InputStream stream) {//mio
+		if (stream != null) {
+            try {
+              stream.close (); // OK
+              return stream;
+            }catch (Exception e9) {
+           		System.out.println("Error");
+            }
+          }
+	}
+	public InputStream ifMethod1(InputStream stream) {//mio
+		if (stream != null) {
+            try {
+              stream.close (); // OK
+              return stream;
+            }catch (Exception e10) {
+           		System.out.println("Error");
+            }
+          }
+	}
+	private InputStream openStream(String filen){
+		String filename = filen;
+		InputStream stream = null;
+		String filenameActual = " ";
+		int aux = 0;
+
+		stream = connessione(filename,stream);
+		// if not online, check to see if the user is asking for a file
+		// whose name isn't properly capitalized. this helps prevent issues
+		// when a sketch is exported to the web, where case sensitivity
+		// matters, as opposed to windows and the mac os default where
+		// case sensitivity does not.
+		ifcase7(filename, filenameActual, stream);
+		
 		try{
 			// by default, data files are exported to the root path of the jar.
 			// (not the data folder) so check there first.
@@ -771,7 +919,7 @@ public void errorMethod(String sTagName) {
 
 			// hm, check the data subfolder
 			stream = pApplet.getClass().getResourceAsStream("data/" + filename);
-			aux = ifStream(stream);
+			
 			if(aux == 1) return stream;
 
 			// attempt to load from a local file, used when running as
@@ -789,9 +937,13 @@ public void errorMethod(String sTagName) {
 					try{
 						//mio
 						stream = new FileInputStream(new File("data", filename));
-						stream = loadFile(stream,filename,aux );
-						return stream;
 						
+					}finally {
+							stream = loadFile(stream,filename,aux );
+								ifMethod(stream);
+					         stream.close();  //mio
+						
+					}
 				}catch (IOException e2){
 					System.out.println("Error");
 				}
@@ -801,7 +953,10 @@ public void errorMethod(String sTagName) {
 						
 						stream = new FileInputStream(filename);
 						stream = loadFile(stream,filename,aux );
-						return stream;
+					}finally {
+						ifMethod1(stream);
+					       stream.close();    //mio
+					}
 					
 				}catch (IOException e1){
 					System.out.println("Error");
@@ -813,13 +968,9 @@ public void errorMethod(String sTagName) {
 
 			if (stream == null)
 				throw new IOException("openStream() could not open " + filename);
-				}catch (Exception e){
-			System.out.println("Error");
-		}
+			
 		return null; // #$(*@ compiler
-	} catch (Exception pippo){
-		System.out.println("Error");
-	} // online, whups
+	
 	}
 	
 
@@ -847,7 +998,7 @@ public void errorMethod(String sTagName) {
 	 */
 	public void loadElement(final String documentUrl){
 
-		Thread loader;
+		Thread loader=null;
 		if (documentUrl.startsWith("<?xml")){
 			loader = new Thread(new Loader(new StringReader(documentUrl),parent));
 		}else{
@@ -867,4 +1018,5 @@ public void errorMethod(String sTagName) {
 	
 
 
+}
 }

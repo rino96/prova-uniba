@@ -1,11 +1,11 @@
 //mio
-package org.json;
 
 
-import prova.JSONArray;
-import prova.JSONException;
-import prova.JSONObject;
-import prova.JSONTokener;
+
+import JSONArray;
+import JSONException;
+import JSONObject;
+import JSONTokener;
 
 /*
 Copyright (c) 2002 JSON.org
@@ -60,7 +60,7 @@ public class CDL {
      * @throws JSONException if the quoted string is badly formed.
      */
 	public static void for1(char c, char q, StringBuffer sb,JSONTokener x ) {//mio
-		for (;;) {
+		while(c == q ) {
     		c = x.next();
     		if (c == q) {
     			break;
@@ -78,7 +78,7 @@ public class CDL {
 	        case '"':
 	        case '\'':
 	        	q = c;
-	        	String sb;
+	        	String sb=null;
 	        	for1(c, q, sb, x );
 	            return sb;//qui
 	        case ',':
@@ -90,9 +90,9 @@ public class CDL {
 	        }
 	}
     private static String getValue(JSONTokener x) throws JSONException {
-        char c;
-        char q;
-        String sb;
+        char c=0;
+        char q=0;
+        String sb=null;
         do {
             c = x.next();
         } while (c == ' ' || c == '\t');
@@ -112,7 +112,7 @@ public class CDL {
     }
     }
     public static void for3Method(char c,JSONArray ja,JSONTokener x) {//mio
-    	for (;;) {                
+    	while (c == ',') {                
             if (c == ',') {
                 break;
             }
@@ -127,7 +127,7 @@ public class CDL {
         }
     
     public static  String for2Method( JSONArray ja, JSONTokener x) {//mio prima Object
-    	for (;;) {
+    	while(value == null) {
 			String value = getValue(x);
             char c = x.next();
             if (value == null || 
@@ -210,7 +210,7 @@ public class CDL {
             return null;
         }
         JSONArray ja = new JSONArray();
-        for (;;) {
+        while(jo == null) {
             JSONObject jo = rowToJSONObject(names, x);
             if (jo == null) {
                 break;

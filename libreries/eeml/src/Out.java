@@ -16,6 +16,8 @@ import java.net.HttpURLConnection;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
+
 
 
 /**
@@ -27,16 +29,20 @@ import java.net.URL;
 
 public class Out {
 
+	/**
+	 * dichiarazione 
+	 * documetazione javaDoc
+	 */
 	PApplet parent;
 	private XMLElement localEnvironment;	
 	private Server myServer;
 	private String incomingMsg;
 
-	private String HTTPHeader = "HTTP/1.1 200 OK\n";
-	private String contentHeader = "Content-type: application/xml\n\n";
-	private String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-	private String eemlHeader = "<eeml xmlns=\"http://www.eeml.org/xsd/005\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd\" version=\"5\">\n";
-	private String eemlFooter = "\n</eeml>";
+	private final String HTTPHeader = "HTTP/1.1 200 OK\n";
+	private final String contentHeader = "Content-type: application/xml\n\n";
+	private final String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	private final String eemlHeader = "<eeml xmlns=\"http://www.eeml.org/xsd/005\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd\" version=\"5\">\n";
+	private final String eemlFooter = "\n</eeml>";
 
 	private String locationData = "";
 	
@@ -47,6 +53,11 @@ public class Out {
 	private XMLElement valueElement;
 	//private XMLElement tagElement;
 	
+	/**
+	 * 
+	 * @param parent
+	 * @param myport
+	 */
 	public Out (PApplet parent, int myport) { 
 
 		this.parent = parent;
@@ -59,21 +70,30 @@ public class Out {
 		//tagElement = new XMLElement("tag");
 	} 
 
+	/**
+	 * metodo publico out
+	 * documentazione javaDoc
+	 * @param parent
+	 */
 	public Out (PApplet parent) { 
 
-		this.parent = parent;
 		localEnvironment = new XMLElement("environment");
 		incomingMsg = null;		
 		
 		valueElement = new XMLElement("value");
 	} 
 
-
+/**
+ * metofo per l'aggiunta della data
+ * documetazione javaDoc
+ * @param id
+ * @param tags
+ */
 	public void addData(int id, String tags){		
 		
 		XMLElement thisDatastream = new XMLElement("data");   
 		thisDatastream.addAttribute("id",Integer.toString(id));
-		String thisDatastreamTags[] =  tags.split(","); 
+		String[] thisDatastreamTags =  tags.split(","); 
 		int thisDatastreamTagCount = thisDatastreamTags.length;
 		XMLElement tag = new XMLElement("tag");
 		XMLElement tagChild = new XMLElement(thisDatastreamTags[i], true);
@@ -183,7 +203,11 @@ public class Out {
 		return incomingMsg;
 
 	}
-
+/**
+ * metodo per la creazione di EEML
+ * documentazione JavaDoc
+ * @return
+ */
 	private String createEEML(){
 		
 		int totalDatastreams = localEnvironment.countChildren();
@@ -239,31 +263,25 @@ public class Out {
 
 		boolean hasClient_ = false;	
 		Client thisClient = myServer.available();
-		if (thisClient != null ) { hasClient_ = true; }	
+		if (thisClient != null ) { 
+			hasClient_ = true; 
+		}	
 		return hasClient_;
 	}
 
-	/*
-	private boolean isDataElement(XMLElement thisElement){
-		boolean is = false;
-		if (thisElement.getElement().equals(dataElement.getElement())) is = true;
-		return is;
-	}
-*/
+	/**
+	 * documentazione javaDoc
+	 * @param thisElement
+	 * @return
+	 */
 	private boolean isValueElement(XMLElement thisElement){
 
 		boolean is = false;
-		if (thisElement.getElement().equals(valueElement.getElement())) is = true;
+		if (thisElement.getElement().equals(valueElement.getElement())) {
+			is = true;	
+		}
 		return is;
 	}
-/*
-	private boolean isTagElement(XMLElement thisElement){
-
-		boolean is = false;
-		if (thisElement.getElement().equals(tagElement.getElement())) is = true;
-		return is;
-	}
-*/
 	
 	public int updatePachube(String updateURL, String pachubeAPIKey){		
 		int rCode = 999;
@@ -279,14 +297,14 @@ public class Out {
 		return rCode;
 	}
 
-	public static int updateDataAuthorizer(String urlstr, String parameters, String pachubeAPIKey)
+	public static Object updateDataAuthorizer(String urlstr, String parameters, String pachubeAPIKey)
 	throws IOException
 	{
-		int rCode; 
+		int rCode=0; 
 		try{
 		    
-			HttpURLConnection hpcon = new URL (urlstr).openConnection();            
-			hpcon.setRequestMethod("PUT");
+			URLConnection hpcon = new URL (urlstr).openConnection();            
+			((HttpURLConnection) hpcon).setRequestMethod("PUT");
 			hpcon.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
 			hpcon.setRequestProperty ("X-PachubeApiKey", pachubeAPIKey);        
 
@@ -301,9 +319,9 @@ public class Out {
 			printout.flush ();
 			printout.close ();
 
-			rCode = hpcon.getResponseCode();
+			rCode = ((HttpURLConnection) hpcon).getResponseCode();
 			return hpcon.getContent();		
-		} catch((SSLException  e){
+		} catch(Exception  e){
 			 logSecurityIssue(e); //
 		      terminateInsecureConnection();
 			System.out.println("There was a problem while updating the Pachube resource: " + e);

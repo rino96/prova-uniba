@@ -20,6 +20,10 @@ public class SVG extends PApplet{
 
 	int yPos = 0;
 
+	
+	/**
+	 * documentazione javaDoc
+	 */
 	public void setup(){
 		size(400, 400);
 		smooth();

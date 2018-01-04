@@ -6,10 +6,7 @@ package org.json;
  * @version 2008-09-18
  */
 public class JSONException extends Exception {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 0;
+    
 	private Throwable cause;
 
     /**

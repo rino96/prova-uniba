@@ -12,11 +12,6 @@ package eeml;
 
 final class InvalidAttributeException extends Exception{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4192753777462605694L;
-
 	public InvalidAttributeException(String attributeName){
 		super("You can't add the attribute " + attributeName + " to a PCDATA section.");
 	}

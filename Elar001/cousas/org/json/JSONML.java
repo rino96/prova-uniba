@@ -155,14 +155,14 @@ public void ifCMethod(XMLTokener x) {
         
         
         public static void openTagControlMethod(XMLTokener x,Object token) {
-        	
+        	 String errore = "Misshaped tag";
         	token = null;
-            for (;;) {
+            while (token == null) {
                 if (token == null) {
                     token = x.nextToken();
                 }
                 if (token == null) {
-                	throw x.syntaxError("Misshaped tag");
+                	throw x.syntaxError(errore);
                 }
                 if (!(token instanceof String)) {
                 	break;
@@ -271,7 +271,7 @@ public void ifCMethod(XMLTokener x) {
             	    String closeTag,int i, JSONArray  newja, JSONObject newjo, String tagName, 
             	    boolean arrayForm, JSONArray ja) {
             
-            	if (token.equals("CDATA") && x.next() == '[') {
+            	if ("CDATA".equals(token)&& x.next() == '[') {
                 	controlloJa(ja);
          
             } else {
@@ -394,13 +394,13 @@ public void ifCMethod(XMLTokener x) {
 	
     private static String parse(XMLTokener x, boolean arrayForm, 
     		JSONArray ja) throws JSONException {
-        String     attribute;
-        char       c;
+        String     attribute=null;
+        char       c=0;
         String	   closeTag = null;
-        int        i;
+        int        i=0;
         JSONArray  newja = null;
         JSONObject newjo = null;
-        Object     token;
+        Object     token=null;
         String	   tagName = null;
         
 // Test for and skip past these forms:
@@ -530,15 +530,15 @@ public void ifCMethod(XMLTokener x) {
     //______________________________________________________
     
     public static String toString(JSONArray ja) throws JSONException {
-    	Object		 e;
-    	int			 i;
-    	JSONObject   jo;
-    	String       k;
-	    Iterator     keys;
-	    int			 length;
+    	Object		 e= null;
+    	int			 i=0;
+    	JSONObject   jo= null;
+    	String       k=null;
+	    Iterator     keys= null;
+	    int			 length=0;
     	StringBuffer sb = new StringBuffer();
-	    String       tagName;
-	    String       v;
+	    String       tagName=null;
+	    String       v=null;
 	    
 // Emit <tagName	    
     	
@@ -606,14 +606,14 @@ public void ifCMethod(XMLTokener x) {
     //____________________________________________________________
 	public static String toString(JSONObject jo) throws JSONException {
 	    StringBuffer sb = new StringBuffer();
-	    Object		 e;
-	    int          i;
-	    JSONArray    ja;
-	    String       k;
-	    Iterator     keys;
-	    int          len;
-	    String       tagName;
-	    String       v;
+	    Object		 e=null;
+	    int          i=0;
+	    JSONArray    ja=null;
+	    String       k=null;
+	    Iterator     keys=null;
+	    int          len=0;
+	    String       tagName=null;
+	    String       v=null;
 	
 //Emit <tagName
 	
