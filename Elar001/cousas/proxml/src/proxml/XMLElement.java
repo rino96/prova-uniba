@@ -55,7 +55,8 @@ public class XMLElement{
 	     * @related addAttribute ( )
 	     */
 	    public boolean hasAttributes () {
-	        return!attributes.isEmpty();
+	    	boolean ritorno = !attributes.isEmpty();
+	        return ritorno;
 	    }
 
 	    /**
@@ -72,7 +73,8 @@ public class XMLElement{
 	     * @related addAttribute ( )
 	     */
 	    public boolean hasAttribute (String key) {
-	        return attributes.containsKey(key);
+	    	boolean ritorno = attributes.containsKey(key);
+	        return ritorno;
 	    }
 		
 		/**
@@ -89,7 +91,8 @@ public class XMLElement{
 	     * @related addAttribute ( )
 		 */
 		public int countAttributes(){
-			return attributes.size();
+			int ritorno = attributes.size();
+			return ritorno;
 			
 		}
 		 /**
@@ -124,7 +127,8 @@ public class XMLElement{
 	    * @related hasChildren ( )
 		 */
 		public XMLElement getChild(int i){
-			return ((XMLElement)children.get(i));
+			XMLElement ritorno = ((XMLElement)children.get(i));
+			return ritorno;
 		}
 
 	    /**
@@ -154,7 +158,8 @@ public class XMLElement{
 	    * @related hasChildren ( )
 		 */
 		public int countChildren(){
-			return children.size();
+			int ritorno = children.size();
+			return ritorno;
 		}
 		/**
 	     * Use this method for a simple trace of the XML structure, beginning from a certain 
